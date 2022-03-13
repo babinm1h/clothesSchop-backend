@@ -3,15 +3,11 @@ import mongoose from "mongoose";
 
 const OrderSchema = new mongoose.Schema({
     userId: { type: String, required: true },
-    products: [{
-        productId: { type: String },
-        quan: { type: Number, default: 1 }
-    }],
-
+    products: [{ type: mongoose.Types.ObjectId, ref: "CartProduct" }],
     amount: { type: Number, required: true },
     address: { type: Object, required: true },
     status: { type: String, default: "pending" },
 
 }, { timestamps: true })
 
-export default mongoose.model('Order', OrderSchema)
+export const Order = mongoose.model('Order', OrderSchema)

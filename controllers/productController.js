@@ -1,13 +1,31 @@
+import cloudinary from "../middleware/cloudinary.js"
 import { Product } from "../models/product.js"
 
 class ProductController {
 
     async create(req, res) {
         try {
+            const file = req.file
+            if (!file) return res.status(400).send()
+
             const productData = req.body
             if (!productData) return res.status(400).send()
-            const product = await Product.create(productData)
-            return res.status(201).json(product)
+
+            cloudinary.v2.uploader.upload_stream({ folder: "admin" }, async (err, result) => {
+                if (err || !result) throw new Error(`Cloudinary err0r`)
+
+                const url = result.secure_url
+                const product = await Product.create({
+                    ...productData, img: url,
+                    categories: productData.categories.split(","),
+                    size: productData.size.split(","),
+                    color: productData.color.split(","),
+                })
+                return res.status(201).json(product)
+
+
+            }).end(file.buffer)
+
 
         } catch (err) {
             return res.status(500).json({ message: "Server err0r" })
@@ -68,6 +86,18 @@ class ProductController {
         }
     }
 
+
+    async delete(req, res) {
+        try {
+            const { id } = req.params
+            if (!id) return res.status(400).send()
+            const product = await Product.findByIdAndDelete(id)
+            return res.json(product)
+
+        } catch (err) {
+            return res.status(500).json({ message: "Server err0r" })
+        }
+    }
 
 }
 

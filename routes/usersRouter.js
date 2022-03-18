@@ -9,3 +9,4 @@ export const usersRouter = new Router()
 
 usersRouter.delete("/:id", checkAdmin, usersController.deleteOne)
 usersRouter.get("/:id", usersController.getOne)
+usersRouter.get("/", usersController.getAll)

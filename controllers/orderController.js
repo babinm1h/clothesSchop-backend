@@ -48,6 +48,31 @@ class OrderController {
     }
 
 
+    async updateStatus(req, res) {
+        try {
+            const id = req.params.id
+            if (!id) return res.status(400).send()
+
+            const order = await Order.findOneAndUpdate({ _id: id }, { status: req.body.status }, { new: true })
+            if (!order) return res.status(400).send()
+
+            return res.json(order)
+
+        } catch (err) {
+            return res.status(500).json({ message: "Server err0r" })
+        }
+    }
+
+
+    async adminGet(req, res) {
+        try {
+            const orders = await Order.find()
+            return res.json(orders)
+
+        } catch (err) {
+            return res.status(500).json({ message: "Server err0r" })
+        }
+    }
 
 }
 

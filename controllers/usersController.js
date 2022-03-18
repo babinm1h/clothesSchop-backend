@@ -31,6 +31,17 @@ class UsersController {
     }
 
 
+    async getAll(req, res) {
+        try {
+            const users = await User.find()
+            return res.json(users)
+
+        } catch (err) {
+            return res.status(500).json({ message: "Ошибка сервера" })
+        }
+    }
+
+
 }
 
 export default new UsersController()

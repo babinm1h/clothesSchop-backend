@@ -9,11 +9,12 @@ import cors from "cors"
 const PORT = process.env.PORT | 7777
 const app = express()
 
+const origins = [`http://localhost:3001`, `http://localhost:3000`]
 
 app.use(express.json())
 app.use(cors({
     credentials: true,
-    origin: process.env.CLIENT_HOST || `http://localhost:3000`
+    origin: origins
 }))
 app.use(`/api`, router)
 
